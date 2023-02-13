@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cookieconsent</title>
+    <style>
+      #cookie-banner {
+        background-color: #333;
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cookie-banner">
+      <p>
+        We use cookies to enhance your experience. By continuing to use our
+        site, you agree to our use of cookies.
+      </p>
+      <button id="accept-cookies">Accept</button>
+    </div>
+    <a href="www.google.com">go google</a>
+
+    <button id="btn-alert" onclick="alert(1)">Click Me!</button>
+
+    <script>
+      var banner = document.getElementById("cookie-banner");
+      var acceptButton = document.getElementById("accept-cookies");
+
+      function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(";");
+        for (var i = 0; i < ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == " ") {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+      function checkCookie() {
+        var cookie = document.cookie.replace(
+          /(?:(?:^|.*;\s*)cookieconsent_status\s*\=\s*([^;]*).*$)|^.*$/,
+          "$1"
+        );
+        if (cookie != "accepted") {
+          document.addEventListener(
+            "click",
+            function (event) {
+              event.preventDefault();
+            },
+            true
+          );
+
+          var buttons = document.getElementsByTagName("button");
+          // Prevent all events on the buttons from being triggered
+          for (var i = 0; i < buttons.length; i++) {
+            buttons[i].addEventListener(
+              "click",
+              function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+              },
+              true
+            );
+          }
+
+          banner.style.display = "block";
+          return;
+        }
+
+        banner.style.display = "none";
+
+        //logics other js save cookie
+      }
+
+      acceptButton.addEventListener("click", function () {
+        setCookie("cookieconsent_status", "accepted", 365);
+        banner.style.display = "none";
+      });
+
+      checkCookie();
+    </script>
+  </body>
+</html>
